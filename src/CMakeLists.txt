@@ -33,14 +33,14 @@ set(sources
   lfunc.c 
   lgc.c 
   llex.c 
-	lmem.c 
+  lmem.c 
   lobject.c 
   lopcodes.c
   lparser.c 
   lstate.c 
   lstring.c 
   ltable.c
-	ltm.c 
+  ltm.c 
   lundump.c 
   lvm.c 
   lzio.c
@@ -52,7 +52,7 @@ set(sources
   lcorolib.c 
   ldblib.c 
   liolib.c
-	lmathlib.c 
+  lmathlib.c 
   loslib.c 
   lstrlib.c 
   ltablib.c 
