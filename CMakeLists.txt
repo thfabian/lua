@@ -44,7 +44,10 @@ add_definitions(-DLUA_COMPAT_5_2)
 
 # Windows
 if(WIN32) 
-
+  if(BUILD_SHARED_LIBS)
+    add_definitions(-DLUA_BUILD_AS_DLL)
+  endif()
+    
 # MacOSX
 elseif(APPLE)
   add_definitions(-DLUA_USE_MACOSX)
