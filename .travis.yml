@@ -7,12 +7,31 @@ matrix:
   # OSX / Clang
   - os: osx
     osx_image: xcode8
+    env: LIB=SHARED
+
+  # OSX / Clang
+  - os: osx
+    osx_image: xcode8
+    env: LIB=STATIC
   
   # Linux / GCC
   - os: linux
     compiler: gcc
     env: 
       - C_COMPILER=gcc-4.9
+      - LIB=STATIC
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
+        packages: 
+          - gcc-4.9
+          - libreadline-dev
+  
+  - os: linux
+    compiler: gcc
+    env: 
+      - C_COMPILER=gcc-4.9
+      - LIB=SHARED
     addons:
       apt:
         sources: ['ubuntu-toolchain-r-test']
@@ -20,27 +39,6 @@ matrix:
           - gcc-4.9
           - libreadline-dev
       
-  - os: linux
-    compiler: gcc
-    env: 
-      - C_COMPILER=gcc-5
-    addons:
-      apt:
-        sources: ['ubuntu-toolchain-r-test']
-        packages: 
-          - gcc-5
-          - libreadline-dev
-
-  - os: linux
-    compiler: gcc
-    env:
-      - C_COMPILER=gcc-6
-    addons:
-      apt:
-        sources: ['ubuntu-toolchain-r-test']
-        packages: 
-          - gcc-6
-          - libreadline-dev
   
 before_script:
   - BUILD_DIR=$(pwd)/build
@@ -51,7 +49,9 @@ before_script:
   - cd $BUILD_DIR
 
   - if [[ "${C_COMPILER}" != "" ]]; then export CMAKE_C_COMPILER=${C_COMPILER}; fi
+  - if [[ "${LIB}" == "STATIC" ]]; then export BUILD_SHARED_LIBS=OFF; fi
 
   - cmake ../ -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR
-  - cmake --build . --target install 
+  - make  
+  - make install
 
