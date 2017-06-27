@@ -48,7 +48,7 @@ before_script:
   - pushd $(pwd)
   - cd $BUILD_DIR
 
-  - if [[ "${C_COMPILER}" != "" ]]; then export CMAKE_C_COMPILER=${C_COMPILER}; fi
+  - if [[ "${C_COMPILER}" != "" ]]; then export CC=${C_COMPILER}; fi
   - if [[ "${LIB}" == "STATIC" ]]; then export BUILD_SHARED_LIBS=OFF; fi
 
   - cmake ../ -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR
