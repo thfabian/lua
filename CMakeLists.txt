@@ -45,8 +45,8 @@ option(BUILD_LUA_COMPILER "Build the lua compiler (luac)." ON)
 
 # Version options
 set(LUA_VERSION_MAJOR "5" CACHE INTERNAL "Lua major version")
-set(LUA_VERSION_MINOR "4" CACHE INTERNAL "Lua minor version")
-set(LUA_VERSION_RELEASE "3" CACHE INTERNAL "Lua release version")
+set(LUA_VERSION_MINOR "3" CACHE INTERNAL "Lua minor version")
+set(LUA_VERSION_RELEASE "4" CACHE INTERNAL "Lua release version")
 set(LUA_VERSION "${LUA_VERSION_MAJOR}.${LUA_VERSION_MINOR}.${LUA_VERSION_RELEASE}"
     CACHE INTERNAL "Lua version")
 
