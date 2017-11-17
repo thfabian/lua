@@ -40,5 +40,4 @@ function lua_check_install {
 
 lua_check_install $install_dir/lib liblua
 lua_check_install $install_dir/include lua.h
-lua_check_install $install_dir/bin luac
-lua_check_install $install_dir/bin lua
+lua_check_install $install_dir/lib/cmake/lua lua-config
