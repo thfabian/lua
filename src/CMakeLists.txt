@@ -75,10 +75,22 @@ add_library(lua_objects OBJECT ${sources})
 # Lua library
 add_library(liblua $<TARGET_OBJECTS:lua_objects>)
 set_target_properties(liblua PROPERTIES OUTPUT_NAME lua)
-install(TARGETS liblua 
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib)
+set_target_properties(liblua PROPERTIES VERSION "${LUA_VERSION}")
+set_target_properties(liblua PROPERTIES SOVERSION "${LUA_VERSION}")
+
+install(
+  TARGETS liblua 
+  EXPORT lua-lib-targets
+  RUNTIME DESTINATION ${LUA_INSTALL_BIN_DIR}
+  LIBRARY DESTINATION ${LUA_INSTALL_LIB_DIR}
+  ARCHIVE DESTINATION ${LUA_INSTALL_LIB_DIR}
+)
+install(
+  EXPORT lua-lib-targets 
+  NAMESPACE lua:: 
+  DESTINATION ${LUA_INSTALL_CMAKE_DIR}
+  EXPORT_LINK_INTERFACE_LIBRARIES
+)
         
 # Lua compiler
 if(BUILD_LUA_COMPILER)
@@ -89,7 +101,17 @@ if(BUILD_LUA_COMPILER)
     target_link_libraries(luac ${LUA_EXTERNAL_LIBS})
   endif()
   
-  install(TARGETS luac RUNTIME DESTINATION bin)
+  install(
+    TARGETS luac 
+    EXPORT lua-compiler-targets 
+    RUNTIME DESTINATION ${LUA_INSTALL_BIN_DIR}
+  )
+  install(
+    EXPORT lua-compiler-targets 
+    NAMESPACE lua:: 
+    DESTINATION ${LUA_INSTALL_CMAKE_DIR}
+    EXPORT_LINK_INTERFACE_LIBRARIES
+  )
 endif()
 
 # Lua interpreter
@@ -100,5 +122,16 @@ if(BUILD_LUA_INTERPRETER)
     add_executable(lua lua.c $<TARGET_OBJECTS:lua_objects>)
     target_link_libraries(lua ${LUA_EXTERNAL_LIBS})
   endif()  
-  install(TARGETS lua RUNTIME DESTINATION bin)
+
+  install(
+    TARGETS lua 
+    EXPORT lua-interpreter-targets
+    RUNTIME DESTINATION ${LUA_INSTALL_BIN_DIR}
+  )
+  install(
+    EXPORT lua-interpreter-targets 
+    NAMESPACE lua:: 
+    DESTINATION ${LUA_INSTALL_CMAKE_DIR}
+    EXPORT_LINK_INTERFACE_LIBRARIES
+  )
 endif()

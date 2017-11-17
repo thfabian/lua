@@ -22,24 +22,42 @@
 #
 #*****************************************************************************#
 
-# CMake version
-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+include(CMakePackageConfigHelpers)
 
-# Set default build-type to Release
+# CMake version
+cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
+
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING 
       "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+if(NOT BUILD_SHARED_LIBS)
+  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries." FORCE)
+endif()
 
 project(lua C)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 # Project options
-option(BUILD_SHARED_LIBS "Build shared instead of static libraries." ON)
 option(BUILD_LUA_INTERPRETER "Build the lua interpreter (lua)." ON)
 option(BUILD_LUA_COMPILER "Build the lua compiler (luac)." ON)
 
+# Version options
+set(LUA_VERSION_MAJOR "5" CACHE INTERNAL "Lua major version")
+set(LUA_VERSION_MINOR "4" CACHE INTERNAL "Lua minor version")
+set(LUA_VERSION_RELEASE "3" CACHE INTERNAL "Lua release version")
+set(LUA_VERSION "${LUA_VERSION_MAJOR}.${LUA_VERSION_MINOR}.${LUA_VERSION_RELEASE}"
+    CACHE INTERNAL "Lua version")
+
+# Install directories
+set(LUA_INSTALL_ROOT "")
+set(LUA_INSTALL_INCLUDE_DIR "include")
+set(LUA_INSTALL_LIB_DIR "lib")
+set(LUA_INSTALL_BIN_DIR "bin")
+set(LUA_INSTALL_CMAKE_DIR "lib/cmake/lua")
+
+message(STATUS "Lua: ${LUA_VERSION}")
 add_definitions(-DLUA_COMPAT_5_2)
 
 # Windows
@@ -92,4 +110,27 @@ else()
 endif()
 
 add_subdirectory(src)
+ 
+# Generate lua-config-version.cmake
+set(version_file "${CMAKE_BINARY_DIR}/${LUA_INSTALL_CMAKE_DIR}/lua-config-version.cmake")
+write_basic_package_version_file(
+  "${version_file}"
+  VERSION ${LUA_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
 
+# Generate lua-config.cmake
+set(config_file "${CMAKE_BINARY_DIR}/${LUA_INSTALL_CMAKE_DIR}/lua-config.cmake")
+configure_package_config_file(
+  "${CMAKE_SOURCE_DIR}/cmake/lua-config.cmake.in" 
+  "${config_file}"
+  INSTALL_DESTINATION "${LUA_INSTALL_CMAKE_DIR}"
+   PATH_VARS 
+     LUA_INSTALL_ROOT
+     LUA_INSTALL_INCLUDE_DIR
+     LUA_INSTALL_LIB_DIR
+     LUA_INSTALL_BIN_DIR
+     LUA_INSTALL_CMAKE_DIR
+)
+
+install(FILES ${version_file} ${config_file} DESTINATION "${LUA_INSTALL_CMAKE_DIR}")
