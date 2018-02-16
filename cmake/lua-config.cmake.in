@@ -24,13 +24,13 @@
 
 @PACKAGE_INIT@
 
-set(LUA_ROOT "@PACKAGE_LUA_INSTALL_ROOT}" CACHE PATH "Install root of lua")
+set(LUA_ROOT "@PACKAGE_LUA_INSTALL_ROOT@" CACHE PATH "Install root of lua")
 
 # Import lua library
 include("@PACKAGE_LUA_INSTALL_CMAKE_DIR@/lua-lib-targets.cmake")
 set(LUA_INCLUDE_DIRS "@PACKAGE_LUA_INSTALL_INCLUDE_DIR@" CACHE PATH "Include directory of lua")
 
-get_property(__lua_lib TARGET lua::liblua PROPERTY LOCATION)
+get_property(__lua_lib TARGET lua::lua PROPERTY LOCATION)
 set(LUA_LIBRARIES "${__lua_lib}" CACHE BOOL "Path to the lua library")
 
 # Export compiler and interpreter
@@ -49,4 +49,4 @@ if(LUA_HAS_INTERPRETER)
 endif()
 
 # Report findings
-message(STATUS "Found Lua: ${LUA_LIBRARIES} (ver ${LUA_VERSION})") 
+message(STATUS "Found Lua: ${LUA_LIBRARIES} (ver ${lua_VERSION})")
